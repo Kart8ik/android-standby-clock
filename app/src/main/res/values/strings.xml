@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Table Clock</string>
+    <string name="enter_standby_mode">Enter Standby Mode</string>
+    <string name="open_screen_saver_settings">Open Screen Saver Settings</string>
+    <string name="instructions">To use as an automatic screensaver:\n1. Open Screen Saver settings\n2. Select \'Bedside Clock\'</string>
+    <string name="preview_desc">Preview</string>
+    <string name="use_24_hr_format">Use 24-hr format</string>
+    <string name="temperature_unit_c">Temperature Unit : °C</string>
+    <string name="background_color">Background Color</string>
+    <string name="active_segment_color">Active Segment Color</string>
+    <string name="inactive_segment_color">Inactive Segment Color</string>
 </resources>
