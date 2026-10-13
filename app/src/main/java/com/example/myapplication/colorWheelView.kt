@@ -37,6 +37,14 @@ class ColorWheelView @JvmOverloads constructor(
     private var draggingWheel = false
     private var draggingBrightness = false
 
+    var primaryColor: Int = 0xFF6750A4.toInt()
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
+
     var selectedColor: Int
         get() = Color.HSVToColor(
             floatArrayOf(hue, saturation, value)
@@ -199,42 +207,21 @@ class ColorWheelView @JvmOverloads constructor(
     }
 
     private fun drawWheelIndicator(canvas: Canvas) {
-
-        val angleRadians = Math.toRadians(
-            (hue - 90f).toDouble()
-        )
-
+        val angleRadians = Math.toRadians((hue - 90f).toDouble())
         val distance = saturation * wheelRadius
 
-        val x = wheelCenterX +
-                cos(angleRadians).toFloat() * distance
+        val x = wheelCenterX + cos(angleRadians).toFloat() * distance
+        val y = wheelCenterY + sin(angleRadians).toFloat() * distance
 
-        val y = wheelCenterY +
-                sin(angleRadians).toFloat() * distance
+        val outerRadius = dp(12f)
 
-        val outerRadius = dp(10f)
+        val primaryColor = primaryColor
+        // Circle Indicator
+        indicatorPaint.style = Paint.Style.FILL
+        indicatorPaint.color = primaryColor
+        indicatorPaint.strokeWidth = dp(3.5f)
+        canvas.drawCircle(x, y, outerRadius, indicatorPaint)
 
-        // Black outer ring
-        indicatorPaint.color = Color.BLACK
-        indicatorPaint.strokeWidth = dp(3f)
-
-        canvas.drawCircle(
-            x,
-            y,
-            outerRadius,
-            indicatorPaint
-        )
-
-        // White inner ring
-        indicatorPaint.color = Color.WHITE
-        indicatorPaint.strokeWidth = dp(2f)
-
-        canvas.drawCircle(
-            x,
-            y,
-            outerRadius,
-            indicatorPaint
-        )
     }
 
     private fun drawBrightnessSlider(
@@ -255,9 +242,7 @@ class ColorWheelView @JvmOverloads constructor(
                 height.toInt()
             )
 
-            generateBrightnessSlider(
-                brightnessBitmap!!
-            )
+            generateBrightnessSlider(brightnessBitmap!!)
         }
 
         val bitmap = brightnessBitmap ?: return
@@ -281,30 +266,21 @@ class ColorWheelView @JvmOverloads constructor(
                 )
             }
         ) {
-
-            // Clip the gradient itself into a rounded rectangle
             drawBitmap(
                 bitmap,
                 null,
                 rect,
                 brightnessPaint
             )
-
         }
 
-        // Optional subtle border
+        // Material 3 theme outline border
         val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            strokeWidth = dp(1f)
-            color = Color.WHITE
+            strokeWidth = dp(1.5f)
+            color = getOutlineColor()
         }
-
-        canvas.drawRoundRect(
-            rect,
-            radius,
-            radius,
-            borderPaint
-        )
+        canvas.drawRoundRect(rect, radius, radius, borderPaint)
     }
 
     private fun generateBrightnessSlider(bitmap: Bitmap) {
@@ -352,35 +328,45 @@ class ColorWheelView @JvmOverloads constructor(
         right: Float,
         height: Float
     ) {
+        val x = left + value * (right - left)
 
-        val x =
-            left + value * (right - left)
+        val pillWidth = dp(12f)
+        val pillMargin = dp(4f)
+        val pillRadius = pillWidth / 2f
 
-        val centerY =
-            top + height / 2f
-
-        val radius =
-            height / 2f + dp(2f)
-
-        brightnessIndicatorPaint.color = Color.BLACK
-        brightnessIndicatorPaint.strokeWidth = dp(3f)
-
-        canvas.drawCircle(
-            x,
-            centerY,
-            radius,
-            brightnessIndicatorPaint
+        val pillRect = RectF(
+            x - pillWidth / 2f,
+            top - pillMargin,
+            x + pillWidth / 2f,
+            top + height + pillMargin
         )
 
-        brightnessIndicatorPaint.color = Color.WHITE
-        brightnessIndicatorPaint.strokeWidth = dp(2f)
+        val primaryColor = primaryColor
+        val onPrimaryColor = getOnPrimaryColor()
 
-        canvas.drawCircle(
-            x,
-            centerY,
-            radius,
-            brightnessIndicatorPaint
-        )
+        // Fill pill with primary color from app theme
+        brightnessIndicatorPaint.style = Paint.Style.FILL
+        brightnessIndicatorPaint.color = primaryColor
+        canvas.drawRoundRect(pillRect, pillRadius, pillRadius, brightnessIndicatorPaint)
+
+    }
+
+    private fun getOnPrimaryColor(): Int {
+        val typedValue = android.util.TypedValue()
+        if (context.theme.resolveAttribute(android.R.attr.colorForeground, typedValue, true)) {
+            return typedValue.data
+        }
+        return Color.WHITE
+    }
+
+    private fun getOutlineColor(): Int {
+        val typedValue = android.util.TypedValue()
+        if (context.theme.resolveAttribute(androidx.appcompat.R.attr.colorControlNormal, typedValue, true) ||
+            context.theme.resolveAttribute(android.R.attr.colorControlNormal, typedValue, true)
+        ) {
+            return typedValue.data
+        }
+        return Color.parseColor("#79747E")
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

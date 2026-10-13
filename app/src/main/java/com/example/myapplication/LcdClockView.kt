@@ -90,10 +90,21 @@ class LcdClockView @JvmOverloads constructor(
         invalidate()
     }
 
+    private var overrideColorBg: Int? = null
+    private var overrideColorActive: Int? = null
+    private var overrideColorInactive: Int? = null
+
+    fun setOverrideColors(bg: Int? = null, active: Int? = null, inactive: Int? = null) {
+        this.overrideColorBg = bg
+        this.overrideColorActive = active
+        this.overrideColorInactive = inactive
+        refreshColors()
+    }
+
     fun refreshColors() {
-        colorBg = AppSettings.getColorBg(context)
-        colorActive = AppSettings.getColorActive(context)
-        colorInactive = AppSettings.getColorInactive(context)
+        colorBg = overrideColorBg ?: AppSettings.getColorBg(context)
+        colorActive = overrideColorActive ?: AppSettings.getColorActive(context)
+        colorInactive = overrideColorInactive ?: AppSettings.getColorInactive(context)
         activePaint.color = colorActive
         inactivePaint.color = colorInactive
         invalidate()

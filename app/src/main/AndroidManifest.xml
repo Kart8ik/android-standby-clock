@@ -31,7 +31,7 @@
             android:name=".BedsideDreamService"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="Bedside Clock"
+            android:label="Table Clock"
             android:permission="android.permission.BIND_DREAM_SERVICE">
             <intent-filter>
                 <action android:name="android.service.dreams.DreamService" />
