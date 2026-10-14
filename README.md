@@ -8,7 +8,7 @@ Built with modern Android development practices, the application features Jetpac
   <img src="standby_clock.jpg" alt="Standby Clock">
 </p>
 
-<p align="center" style="gap: 20px;">
+<p align="center" style="gap: 300px;">
   <img src="settings_menu.jpg" alt="Settings Menu" width="300">
   <img src="color_dialog.jpg" alt="Color Dialog" width="300">
 </p>
