@@ -9,8 +9,8 @@ Built with modern Android development practices, the application features Jetpac
 </p>
 
 <p align="center">
-  <img src="settings_menu.jpg" alt="Settings Menu" width="300" hspace="12">
-  <img src="color_dialog.jpg" alt="Color Dialog" width="300" hspace="12">
+  <img src="settings_menu.jpg" alt="Settings Menu" width="300" hspace="24">
+  <img src="color_dialog.jpg" alt="Color Dialog" width="300" hspace="24">
 </p>
 
 ---
