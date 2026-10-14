@@ -3,7 +3,6 @@
     <string name="enter_standby_mode">Enter Standby Mode</string>
     <string name="open_screen_saver_settings">Open Screen Saver Settings</string>
     <string name="instructions">To use as an automatic screensaver:\n1. Open Screen Saver settings\n2. Select \'Table Clock\'</string>
-    <string name="preview_desc">Preview</string>
     <string name="use_24_hr_format">Use 24-hr format</string>
     <string name="temperature_unit_c">Temperature Unit : °C</string>
     <string name="temperature_unit_f">Temperature Unit : °F</string>
@@ -12,4 +11,23 @@
     <string name="inactive_segment_color">Inactive Segment Color</string>
     <string name="how_to_activate_title">How to activate</string>
     <string name="how_to_activate_desc">Learn how to set up automatic or manual activation</string>
+    <string name="bottom_sheet_title">Make it your table clock</string>
+    <string name="bottom_sheet_desc">Choose how your clock comes to life.</string>
+    <string name="option_1_title">Option 1: Set as screensaver</string>
+    <string name="option_1_desc">Choose this app as your system screensaver to display the table clock when Android activates the screensaver.</string>
+    <string name="option_2_title">Option 2: Automatically open when charging</string>
+    <string name="option_2_desc">On supported Samsung devices, use Modes and Routines to open the table clock automatically when you connect your charger.</string>
+    <string name="steps_for_samsung_devices">Steps for Samsung devices:</string>
+    <string name="open_settings_on_your_samsung_phone">Open Settings on your Samsung phone.</string>
+    <string name="navigate_to_modes_and_routines">Navigate to Modes and Routines.</string>
+    <string name="create_a_new_routine">Create a new routine.</string>
+    <string name="select_connecting_a_charger_as_the_trigger_if_available">Select connecting a charger as the trigger, if available.</string>
+    <string name="add_an_action_to_open_an_app_and_select_this_table_clock_app">Add an action to open an app and select this table clock app.</string>
+    <string name="save_the_routine_and_test_it">Save the routine and test it.</string>
+    <string name="option_2_note">Note: Menu names and available triggers may vary by device and One UI version.</string>
+    <string name="option_3_title">Option 3: Automatically open when performing a certain gesture</string>
+    <string name="option_3_desc">On supported Samsung devices, use Modes and Routines to open the table clock automatically when you perform a certain side button press or finger swipe</string>
+    <string name="select_a_type_of_finger_swipe_or_side_button_press_as_the_trigger">Select a type of finger swipe or side button press as the trigger</string>
+    <string name="option_3_note">Note: Menu names and available triggers may vary by device and One UI version.</string>
+    <string name="preview_desc">Preview · Time and weather are illustrative</string>
 </resources>

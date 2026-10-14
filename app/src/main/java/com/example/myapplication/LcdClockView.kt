@@ -75,10 +75,18 @@ class LcdClockView @JvmOverloads constructor(
         'U' to 0x3E, 'V' to 0xC30, 'W' to 0x2836, 'X' to 0x2D00, 'Y' to 0x1500, 'Z' to 0xC09
     )
 
+    companion object {
+        val PREVIEW_MOCK_WEATHER = WeatherState(
+            temperature = 23f,
+            condition = WeatherCondition.PARTLY_CLOUDY,
+            isDay = true
+        )
+    }
+
     fun updateTime() {
         calendar.timeInMillis = System.currentTimeMillis()
         is24HourFormat = AppSettings.is24HourFormat(context)
-        tempUnit = AppSettings.getTempUnit(context)
+        tempUnit = overrideTempUnit ?: AppSettings.getTempUnit(context)
         refreshColors()
 
         val now = System.currentTimeMillis()
@@ -93,12 +101,28 @@ class LcdClockView @JvmOverloads constructor(
     private var overrideColorBg: Int? = null
     private var overrideColorActive: Int? = null
     private var overrideColorInactive: Int? = null
+    private var overrideTempUnit: String? = null
 
-    fun setOverrideColors(bg: Int? = null, active: Int? = null, inactive: Int? = null) {
+    fun setOverrideParams(
+        bg: Int? = null,
+        active: Int? = null,
+        inactive: Int? = null,
+        tempUnit: String? = null
+    ) {
         this.overrideColorBg = bg
         this.overrideColorActive = active
         this.overrideColorInactive = inactive
+        this.overrideTempUnit = tempUnit
         refreshColors()
+    }
+
+    fun setOverrideColors(bg: Int? = null, active: Int? = null, inactive: Int? = null) {
+        setOverrideParams(
+            bg = bg,
+            active = active,
+            inactive = inactive,
+            tempUnit = this.overrideTempUnit
+        )
     }
 
     fun refreshColors() {
@@ -114,6 +138,8 @@ class LcdClockView @JvmOverloads constructor(
         this.weatherState = state
         postInvalidate()
     }
+
+    fun getWeatherState(): WeatherState? = weatherState
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)

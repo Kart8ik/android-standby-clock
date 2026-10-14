@@ -8,6 +8,7 @@ import com.example.myapplication.ui.settings.ColorPickerType
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import androidx.core.content.edit
 
 class PreferencesDataSource(private val context: Context) {
 
@@ -22,7 +23,6 @@ class PreferencesDataSource(private val context: Context) {
         private const val KEY_RECENT_COLORS_BG = "recent_colors_background"
         private const val KEY_RECENT_COLORS_ACTIVE = "recent_colors_active"
         private const val KEY_RECENT_COLORS_INACTIVE = "recent_colors_inactive"
-        private const val KEY_RECENT_COLORS_LEGACY = "recent_colors"
 
         private const val DEFAULT_COLOR_BG = 0xFF050505.toInt()
         private const val DEFAULT_COLOR_ACTIVE = 0xFF78AB78.toInt()
@@ -32,23 +32,6 @@ class PreferencesDataSource(private val context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-    private fun checkAndMigrateLegacyRecentColors() {
-        if (!prefs.contains(KEY_RECENT_COLORS_BG) && prefs.contains(KEY_RECENT_COLORS_LEGACY)) {
-            val legacyRaw = prefs.getString(KEY_RECENT_COLORS_LEGACY, null)
-            val editor = prefs.edit()
-            if (!legacyRaw.isNullOrBlank()) {
-                val legacyColors = legacyRaw.split(",")
-                    .mapNotNull { it.trim().toIntOrNull() }
-                    .take(5)
-                if (legacyColors.isNotEmpty()) {
-                    editor.putString(KEY_RECENT_COLORS_BG, legacyColors.joinToString(","))
-                }
-            }
-            editor.remove(KEY_RECENT_COLORS_LEGACY)
-            editor.apply()
-        }
-    }
-
     private fun getKeyForType(type: ColorPickerType): String = when (type) {
         ColorPickerType.BACKGROUND -> KEY_RECENT_COLORS_BG
         ColorPickerType.ACTIVE_SEGMENT -> KEY_RECENT_COLORS_ACTIVE
@@ -56,28 +39,25 @@ class PreferencesDataSource(private val context: Context) {
     }
 
     fun getRecentColors(type: ColorPickerType): List<Int> {
-        checkAndMigrateLegacyRecentColors()
         val key = getKeyForType(type)
         val raw = prefs.getString(key, "") ?: ""
         if (raw.isBlank()) return emptyList()
         return raw.split(",")
             .mapNotNull { it.trim().toIntOrNull() }
-            .take(5)
+            .take(6)
     }
 
     fun addRecentColor(type: ColorPickerType, color: Int) {
-        checkAndMigrateLegacyRecentColors()
         val key = getKeyForType(type)
         val current = getRecentColors(type).toMutableList()
         current.remove(color)
         current.add(0, color)
-        val updated = current.take(5)
+        val updated = current.take(6)
         val serialized = updated.joinToString(",")
-        prefs.edit().putString(key, serialized).apply()
+        prefs.edit { putString(key, serialized) }
     }
 
     fun getSettings(): ClockSettings {
-        checkAndMigrateLegacyRecentColors()
         val is24Hour = if (prefs.contains(KEY_24_HOUR_FORMAT)) {
             prefs.getBoolean(KEY_24_HOUR_FORMAT, false)
         } else {
@@ -115,22 +95,22 @@ class PreferencesDataSource(private val context: Context) {
     }
 
     fun set24HourFormat(use24Hour: Boolean) {
-        prefs.edit().putBoolean(KEY_24_HOUR_FORMAT, use24Hour).apply()
+        prefs.edit { putBoolean(KEY_24_HOUR_FORMAT, use24Hour) }
     }
 
     fun setTempUnit(unit: String) {
-        prefs.edit().putString(KEY_TEMP_UNIT, unit).apply()
+        prefs.edit { putString(KEY_TEMP_UNIT, unit) }
     }
 
     fun setColorBg(color: Int) {
-        prefs.edit().putInt(KEY_COLOR_BG, color).apply()
+        prefs.edit { putInt(KEY_COLOR_BG, color) }
     }
 
     fun setColorActive(color: Int) {
-        prefs.edit().putInt(KEY_COLOR_ACTIVE, color).apply()
+        prefs.edit { putInt(KEY_COLOR_ACTIVE, color) }
     }
 
     fun setColorInactive(color: Int) {
-        prefs.edit().putInt(KEY_COLOR_INACTIVE, color).apply()
+        prefs.edit { putInt(KEY_COLOR_INACTIVE, color) }
     }
 }

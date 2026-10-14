@@ -1,17 +1,24 @@
 package com.example.myapplication.ui.settings
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,7 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.myapplication.AppSettings
@@ -80,6 +90,16 @@ fun SettingsScreen(
                 .padding(top = 64.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
 
+            Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-0.5).sp
+                ),
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
             Surface(
                 shape = MaterialTheme.shapes.large,
                 color = MaterialTheme.colorScheme.surface,
@@ -87,21 +107,25 @@ fun SettingsScreen(
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp)
+                    .aspectRatio(20f / 9f, matchHeightConstraintsFirst = true)
                     .clip(RoundedCornerShape(12.dp))
-                    .padding(bottom = 16.dp)
             ) {
                 AndroidView(
                     factory = { context ->
                         LcdClockView(context).apply {
+                            setWeather(LcdClockView.PREVIEW_MOCK_WEATHER)
                             updateTime()
                         }
                     },
                     update = { clockView ->
-                        clockView.setOverrideColors(
+                        if (clockView.getWeatherState() == null) {
+                            clockView.setWeather(LcdClockView.PREVIEW_MOCK_WEATHER)
+                        }
+                        clockView.setOverrideParams(
                             bg = uiState.colorBg,
                             active = uiState.colorActive,
-                            inactive = uiState.colorInactive
+                            inactive = uiState.colorInactive,
+                            tempUnit = uiState.tempUnit
                         )
                         clockView.updateTime()
                     },
@@ -109,11 +133,35 @@ fun SettingsScreen(
                 )
             }
 
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(16.dp)
+                )
+                Text(
+                    text = stringResource(R.string.preview_desc),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
+
             // Settings Menu Card
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
+                    .padding(top = 24.dp)
             ) {
                 Column(
                     modifier = Modifier

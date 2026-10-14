@@ -220,6 +220,12 @@ class ColorWheelView @JvmOverloads constructor(
         indicatorPaint.style = Paint.Style.FILL
         indicatorPaint.color = primaryColor
         indicatorPaint.strokeWidth = dp(3.5f)
+        indicatorPaint.setShadowLayer(
+            dp(4f),
+            0f,
+            0f,
+            Color.DKGRAY
+        )
         canvas.drawCircle(x, y, outerRadius, indicatorPaint)
 
     }
@@ -347,6 +353,12 @@ class ColorWheelView @JvmOverloads constructor(
         // Fill pill with primary color from app theme
         brightnessIndicatorPaint.style = Paint.Style.FILL
         brightnessIndicatorPaint.color = primaryColor
+        brightnessIndicatorPaint.setShadowLayer(
+            dp(4f),
+            0f,
+            0f,
+            Color.DKGRAY
+        )
         canvas.drawRoundRect(pillRect, pillRadius, pillRadius, brightnessIndicatorPaint)
 
     }

@@ -27,8 +27,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,13 +52,13 @@ fun ActivationInstructionsBottomSheet(
         ) {
             // Header Title & Subtitle
             Text(
-                text = "Make it your table clock",
+                text = stringResource(R.string.bottom_sheet_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Choose how your clock comes to life.",
+                text = stringResource(R.string.bottom_sheet_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 4.dp, bottom = 20.dp)
@@ -65,8 +67,8 @@ fun ActivationInstructionsBottomSheet(
             // Option 1: Set as screensaver
             InstructionOptionCard(
                 icon = Icons.Outlined.Info,
-                title = "Option 1: Set as screensaver",
-                explanation = "Choose this app as your system screensaver to display the bedside clock when Android activates the screensaver."
+                title = stringResource(R.string.option_1_title),
+                explanation = stringResource(R.string.option_1_desc)
             ) {
                 Button(
                     onClick = {
@@ -77,7 +79,7 @@ fun ActivationInstructionsBottomSheet(
                         .fillMaxWidth()
                         .padding(top = 12.dp)
                 ) {
-                    Text("Open screensaver settings")
+                    Text(text = stringResource(R.string.open_screen_saver_settings))
                 }
             }
 
@@ -86,8 +88,8 @@ fun ActivationInstructionsBottomSheet(
             // Option 2: Automatically open when charging
             InstructionOptionCard(
                 icon = Icons.Outlined.Info,
-                title = "Option 2: Automatically open when charging",
-                explanation = "On supported Samsung devices, use Modes and Routines to open the bedside clock automatically when you connect your charger."
+                title = stringResource(R.string.option_2_title),
+                explanation = stringResource(R.string.option_2_desc)
             ) {
                 Column(
                     modifier = Modifier
@@ -95,18 +97,18 @@ fun ActivationInstructionsBottomSheet(
                         .padding(top = 12.dp)
                 ) {
                     Text(
-                        text = "Steps for Samsung devices:",
+                        text = stringResource(R.string.steps_for_samsung_devices),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(bottom = 6.dp)
                     )
                     val steps = listOf(
-                        "Open Settings on your Samsung phone.",
-                        "Navigate to Modes and Routines.",
-                        "Create a new routine.",
-                        "Select connecting a charger as the trigger, if available.",
-                        "Add an action to open an app and select this bedside clock app.",
-                        "Save the routine and test it."
+                        stringResource(R.string.open_settings_on_your_samsung_phone),
+                        stringResource(R.string.navigate_to_modes_and_routines),
+                        stringResource(R.string.create_a_new_routine),
+                        stringResource(R.string.select_connecting_a_charger_as_the_trigger_if_available),
+                        stringResource(R.string.add_an_action_to_open_an_app_and_select_this_table_clock_app),
+                        stringResource(R.string.save_the_routine_and_test_it)
                     )
                     steps.forEachIndexed { index, step ->
                         Row(
@@ -126,7 +128,7 @@ fun ActivationInstructionsBottomSheet(
                         }
                     }
                     Text(
-                        text = "Note: Menu names and available triggers may vary by device and One UI version.",
+                        text = stringResource(R.string.option_2_note),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 8.dp)
@@ -139,8 +141,8 @@ fun ActivationInstructionsBottomSheet(
             // Option 3: Automatically open when performing a swipe gesture or button press
             InstructionOptionCard(
                 icon = Icons.Outlined.Info,
-                title = "Option 3: Automatically open when performing a certain gesture",
-                explanation = "On supported Samsung devices, use Modes and Routines to open the bedside clock automatically when you perform a certain side button press or finger swipe"
+                title = stringResource(R.string.option_3_title),
+                explanation = stringResource(R.string.option_3_desc)
             ) {
                 Column(
                     modifier = Modifier
@@ -148,18 +150,18 @@ fun ActivationInstructionsBottomSheet(
                         .padding(top = 12.dp)
                 ) {
                     Text(
-                        text = "Steps for Samsung devices:",
+                        text = stringResource(R.string.steps_for_samsung_devices),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(bottom = 6.dp)
                     )
                     val steps = listOf(
-                        "Open Settings on your Samsung phone.",
-                        "Navigate to Modes and Routines.",
-                        "Create a new routine.",
-                        "Select a type of finger swipe or side button press as the trigger",
-                        "Add an action to open an app and select this bedside clock app.",
-                        "Save the routine and test it."
+                        stringResource(R.string.open_settings_on_your_samsung_phone),
+                        stringResource(R.string.navigate_to_modes_and_routines),
+                        stringResource(R.string.create_a_new_routine),
+                        stringResource(R.string.select_a_type_of_finger_swipe_or_side_button_press_as_the_trigger),
+                        stringResource(R.string.add_an_action_to_open_an_app_and_select_this_table_clock_app),
+                        stringResource(R.string.save_the_routine_and_test_it)
                     )
                     steps.forEachIndexed { index, step ->
                         Row(
@@ -179,7 +181,7 @@ fun ActivationInstructionsBottomSheet(
                         }
                     }
                     Text(
-                        text = "Note: Menu names and available triggers may vary by device and One UI version.",
+                        text = stringResource(R.string.option_3_note),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 8.dp)

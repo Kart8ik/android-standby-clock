@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -68,7 +69,7 @@ fun ColorPickerDialog(
                 // Title
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -81,15 +82,19 @@ fun ColorPickerDialog(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(130.dp)
+                        .aspectRatio(20f / 9f, matchHeightConstraintsFirst = true)
                 ) {
                     AndroidView(
                         factory = { context ->
                             LcdClockView(context).apply {
+                                setWeather(LcdClockView.PREVIEW_MOCK_WEATHER)
                                 updateTime()
                             }
                         },
                         update = { clockView ->
+                            if (clockView.getWeatherState() == null) {
+                                clockView.setWeather(LcdClockView.PREVIEW_MOCK_WEATHER)
+                            }
                             when (pickerType) {
                                 ColorPickerType.BACKGROUND -> clockView.setOverrideColors(bg = currentColor)
                                 ColorPickerType.ACTIVE_SEGMENT -> clockView.setOverrideColors(active = currentColor)
@@ -136,7 +141,7 @@ fun ColorPickerDialog(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        for (i in 0 until 5) {
+                        for (i in 0 until 6) {
                             if (i < recentColors.size) {
                                 val recentColor = recentColors[i]
                                 Surface(
