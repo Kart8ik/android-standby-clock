@@ -47,7 +47,7 @@ fun ActivationSettingRow(
         Icon(
             imageVector = Icons.Outlined.Info,
             contentDescription = title,
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.onTertiaryContainer,
         )
     }
 }

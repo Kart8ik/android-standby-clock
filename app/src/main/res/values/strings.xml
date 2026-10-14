@@ -32,4 +32,6 @@
     <string name="preview_desc">Preview · Time and weather are illustrative</string>
     <string name="exit_clock_mode">Exit clock mode</string>
     <string name="to_open_settings_swipe_back_or_press_the_back_button">To open settings, swipe back or press the Back button.</string>
+    <string name="made_by_kart8ik">Made by @Kart8ik</string>
+    <string name="github_link">https://github.com/Kart8ik/android-standby-clock</string>
 </resources>

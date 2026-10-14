@@ -40,6 +40,7 @@ import com.example.myapplication.LcdClockView
 import com.example.myapplication.R
 import com.example.myapplication.ui.settings.components.ActivationInstructionsBottomSheet
 import com.example.myapplication.ui.settings.components.ActivationSettingRow
+import com.example.myapplication.ui.settings.components.AttributionFooter
 import com.example.myapplication.ui.settings.components.ColorPickerDialog
 import com.example.myapplication.ui.settings.components.ColorSettingRow
 import com.example.myapplication.ui.settings.components.SettingsSwitchRow
@@ -87,143 +88,154 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(top = 64.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-
-            Text(
-                text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = (-0.5).sp
-                ),
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            Surface(
-                shape = MaterialTheme.shapes.large,
-                color = MaterialTheme.colorScheme.surface,
-                tonalElevation = 2.dp,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(20f / 9f, matchHeightConstraintsFirst = true)
-                    .clip(RoundedCornerShape(12.dp))
+                    .fillMaxSize()
+                    .padding(top = 64.dp, start = 16.dp, end = 16.dp, bottom = 24.dp)
             ) {
-                AndroidView(
-                    factory = { context ->
-                        LcdClockView(context).apply {
-                            setWeather(LcdClockView.PREVIEW_MOCK_WEATHER)
-                            updateTime()
-                        }
-                    },
-                    update = { clockView ->
-                        if (clockView.getWeatherState() == null) {
-                            clockView.setWeather(LcdClockView.PREVIEW_MOCK_WEATHER)
-                        }
-                        clockView.setOverrideParams(
-                            bg = uiState.colorBg,
-                            active = uiState.colorActive,
-                            inactive = uiState.colorInactive,
-                            tempUnit = uiState.tempUnit
-                        )
-                        clockView.updateTime()
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
 
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(16.dp)
-                )
                 Text(
-                    text = stringResource(R.string.preview_desc),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
+                    text = stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = (-0.5).sp
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
-            }
 
-            // Settings Menu Card
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp)
-            ) {
-                Column(
+                Surface(
+                    shape = MaterialTheme.shapes.large,
+                    color = MaterialTheme.colorScheme.surface,
+                    tonalElevation = 2.dp,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .aspectRatio(20f / 9f, matchHeightConstraintsFirst = true)
+                        .clip(RoundedCornerShape(12.dp))
                 ) {
-                    SettingsSwitchRow(
-                        title = stringResource(R.string.use_24_hr_format),
-                        checked = uiState.is24HourFormat,
-                        onCheckedChange = on24HourFormatChanged
-                    )
-
-                    SettingsSwitchRow(
-                        title = if (uiState.tempUnit == "C") stringResource(R.string.temperature_unit_c) else stringResource(R.string.temperature_unit_f),
-                        checked = uiState.tempUnit == "F",
-                        onCheckedChange = onTempUnitChanged
-                    )
-
-                    ColorSettingRow(
-                        title = stringResource(R.string.background_color),
-                        color = Color(uiState.colorBg),
-                        onClick = { onOpenColorPicker(ColorPickerType.BACKGROUND) }
-                    )
-
-                    ColorSettingRow(
-                        title = stringResource(R.string.active_segment_color),
-                        color = Color(uiState.colorActive),
-                        onClick = { onOpenColorPicker(ColorPickerType.ACTIVE_SEGMENT) }
-                    )
-
-                    ColorSettingRow(
-                        title = stringResource(R.string.inactive_segment_color),
-                        color = Color(uiState.colorInactive),
-                        onClick = { onOpenColorPicker(ColorPickerType.INACTIVE_SEGMENT) }
-                    )
-
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant
-                    )
-
-                    ActivationSettingRow(
-                        title = stringResource(R.string.how_to_activate_title),
-                        subtitle = stringResource(R.string.how_to_activate_desc),
-                        onClick = onShowActivationInstructions
+                    AndroidView(
+                        factory = { context ->
+                            LcdClockView(context).apply {
+                                setWeather(LcdClockView.PREVIEW_MOCK_WEATHER)
+                                updateTime()
+                            }
+                        },
+                        update = { clockView ->
+                            if (clockView.getWeatherState() == null) {
+                                clockView.setWeather(LcdClockView.PREVIEW_MOCK_WEATHER)
+                            }
+                            clockView.setOverrideParams(
+                                bg = uiState.colorBg,
+                                active = uiState.colorActive,
+                                inactive = uiState.colorInactive,
+                                tempUnit = uiState.tempUnit
+                            )
+                            clockView.updateTime()
+                        },
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
+
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(16.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.preview_desc),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                // Settings Menu Card
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.use_24_hr_format),
+                            checked = uiState.is24HourFormat,
+                            onCheckedChange = on24HourFormatChanged
+                        )
+
+                        SettingsSwitchRow(
+                            title = if (uiState.tempUnit == "C") stringResource(R.string.temperature_unit_c) else stringResource(
+                                R.string.temperature_unit_f
+                            ),
+                            checked = uiState.tempUnit == "F",
+                            onCheckedChange = onTempUnitChanged
+                        )
+
+                        ColorSettingRow(
+                            title = stringResource(R.string.background_color),
+                            color = Color(uiState.colorBg),
+                            onClick = { onOpenColorPicker(ColorPickerType.BACKGROUND) }
+                        )
+
+                        ColorSettingRow(
+                            title = stringResource(R.string.active_segment_color),
+                            color = Color(uiState.colorActive),
+                            onClick = { onOpenColorPicker(ColorPickerType.ACTIVE_SEGMENT) }
+                        )
+
+                        ColorSettingRow(
+                            title = stringResource(R.string.inactive_segment_color),
+                            color = Color(uiState.colorInactive),
+                            onClick = { onOpenColorPicker(ColorPickerType.INACTIVE_SEGMENT) }
+                        )
+
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
+
+                        ActivationSettingRow(
+                            title = stringResource(R.string.how_to_activate_title),
+                            subtitle = stringResource(R.string.how_to_activate_desc),
+                            onClick = onShowActivationInstructions
+                        )
+                    }
+                }
+
+                Button(
+                    onClick = onEnterStandby,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(96.dp)
+                        .padding(top = 24.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.enter_standby_mode),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+
             }
 
-            Button(
-                onClick = onEnterStandby,
+            AttributionFooter(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(96.dp)
-                    .padding(top = 24.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.enter_standby_mode),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-
+            )
         }
     }
 
