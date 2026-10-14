@@ -14,4 +14,7 @@ interface SettingsRepository {
     suspend fun setColorActive(color: Int)
     suspend fun setColorInactive(color: Int)
     suspend fun addRecentColor(type: ColorPickerType, color: Int)
+
+    fun getStandbyHintLaunchCount(): Int
+    suspend fun incrementStandbyHintLaunchCount(): Int
 }

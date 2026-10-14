@@ -30,4 +30,6 @@
     <string name="select_a_type_of_finger_swipe_or_side_button_press_as_the_trigger">Select a type of finger swipe or side button press as the trigger</string>
     <string name="option_3_note">Note: Menu names and available triggers may vary by device and One UI version.</string>
     <string name="preview_desc">Preview · Time and weather are illustrative</string>
+    <string name="exit_clock_mode">Exit clock mode</string>
+    <string name="to_open_settings_swipe_back_or_press_the_back_button">To open settings, swipe back or press the Back button.</string>
 </resources>

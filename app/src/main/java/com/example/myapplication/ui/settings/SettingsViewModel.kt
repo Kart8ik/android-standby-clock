@@ -83,6 +83,17 @@ class SettingsViewModel(
         _showActivationInstructions.value = false
     }
 
+    fun recordStandbyLaunchAndCheckHint(): Boolean {
+        val currentCount = settingsRepository.getStandbyHintLaunchCount()
+        if (currentCount < 2) {
+            viewModelScope.launch {
+                settingsRepository.incrementStandbyHintLaunchCount()
+            }
+            return true
+        }
+        return false
+    }
+
     fun onColorSelected(type: ColorPickerType, color: Int) {
         viewModelScope.launch {
             when (type) {

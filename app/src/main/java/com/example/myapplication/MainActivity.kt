@@ -15,15 +15,21 @@ import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.myapplication.ui.components.StandbyHintOverlay
 import com.example.myapplication.ui.settings.SettingsScreenRoute
 import com.example.myapplication.ui.settings.SettingsViewModel
 import com.example.myapplication.ui.theme.AppTheme
 import kotlinx.coroutines.*
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * MainActivity serves as the primary entry point for the Bedside Clock.
@@ -37,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rootLayout: FrameLayout
     private lateinit var fullScreenClock: LcdClockView
     private lateinit var settingsComposeView: ComposeView
+    private lateinit var standbyHintComposeView: ComposeView
+
+    private var hintJob: Job? = null
 
     private val settingsViewModel: SettingsViewModel by viewModels {
         SettingsViewModel.Factory(this)
@@ -105,9 +114,24 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        standbyHintComposeView = ComposeView(this).apply {
+            visibility = View.GONE
+            setContent {
+                AppTheme {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+                        StandbyHintOverlay()
+                    }
+                }
+            }
+        }
+
         rootLayout = FrameLayout(this)
         rootLayout.addView(fullScreenClock)
         rootLayout.addView(settingsComposeView)
+        rootLayout.addView(standbyHintComposeView)
         setContentView(rootLayout)
 
         // 2. Setup Back Handling
@@ -115,9 +139,35 @@ class MainActivity : AppCompatActivity() {
 
         // 3. Enter Initial State (StandBy Mode by default)
         showStandbyMode()
+
+        // 4. Trigger Standby Hint for genuine launches
+        if (savedInstanceState == null) {
+            checkAndShowStandbyHint()
+        }
         
-        // 4. Start Services
+        // 5. Start Services
         checkLocationPermissions()
+    }
+
+    private fun checkAndShowStandbyHint() {
+        if (settingsViewModel.recordStandbyLaunchAndCheckHint()) {
+            showStandbyHint()
+        }
+    }
+
+    private fun showStandbyHint() {
+        standbyHintComposeView.visibility = View.VISIBLE
+        hintJob?.cancel()
+        hintJob = CoroutineScope(Dispatchers.Main).launch {
+            delay(4000.milliseconds)
+            dismissStandbyHint()
+        }
+    }
+
+    private fun dismissStandbyHint() {
+        hintJob?.cancel()
+        hintJob = null
+        standbyHintComposeView.visibility = View.GONE
     }
 
     private fun showStandbyMode() {
@@ -137,6 +187,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSettingsMode() {
+        dismissStandbyHint()
         currentMode = Mode.SETTINGS
         fullScreenClock.visibility = View.GONE
         settingsComposeView.visibility = View.VISIBLE
@@ -231,6 +282,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        dismissStandbyHint()
         handler.removeCallbacks(weatherRunnable)
         weatherScope.cancel()
     }

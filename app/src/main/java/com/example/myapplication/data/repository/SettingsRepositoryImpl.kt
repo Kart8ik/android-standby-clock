@@ -37,4 +37,12 @@ class SettingsRepositoryImpl(
     override suspend fun addRecentColor(type: ColorPickerType, color: Int) {
         dataSource.addRecentColor(type, color)
     }
+
+    override fun getStandbyHintLaunchCount(): Int {
+        return dataSource.getStandbyHintLaunchCount()
+    }
+
+    override suspend fun incrementStandbyHintLaunchCount(): Int {
+        return dataSource.incrementStandbyHintLaunchCount()
+    }
 }

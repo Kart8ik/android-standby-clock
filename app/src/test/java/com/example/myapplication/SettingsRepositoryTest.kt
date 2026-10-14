@@ -107,8 +107,17 @@ class SettingsRepositoryTest {
 
     class FakeSettingsRepository : SettingsRepository {
         private val _settings = MutableStateFlow(ClockSettings())
+        private var launchCount = 0
+
         override val settings: Flow<ClockSettings> = _settings
         override fun getInitialSettings(): ClockSettings = _settings.value
+
+        override fun getStandbyHintLaunchCount(): Int = launchCount
+
+        override suspend fun incrementStandbyHintLaunchCount(): Int {
+            if (launchCount < 2) launchCount++
+            return launchCount
+        }
 
         override suspend fun set24HourFormat(use24Hour: Boolean) {
             _settings.value = _settings.value.copy(is24HourFormat = use24Hour)

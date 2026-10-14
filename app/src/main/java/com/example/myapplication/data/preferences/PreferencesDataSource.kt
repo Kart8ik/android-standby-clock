@@ -23,6 +23,7 @@ class PreferencesDataSource(private val context: Context) {
         private const val KEY_RECENT_COLORS_BG = "recent_colors_background"
         private const val KEY_RECENT_COLORS_ACTIVE = "recent_colors_active"
         private const val KEY_RECENT_COLORS_INACTIVE = "recent_colors_inactive"
+        private const val KEY_STANDBY_HINT_LAUNCH_COUNT = "standby_hint_launch_count"
 
         private const val DEFAULT_COLOR_BG = 0xFF050505.toInt()
         private const val DEFAULT_COLOR_ACTIVE = 0xFF78AB78.toInt()
@@ -55,6 +56,20 @@ class PreferencesDataSource(private val context: Context) {
         val updated = current.take(6)
         val serialized = updated.joinToString(",")
         prefs.edit { putString(key, serialized) }
+    }
+
+    fun getStandbyHintLaunchCount(): Int {
+        return prefs.getInt(KEY_STANDBY_HINT_LAUNCH_COUNT, 0)
+    }
+
+    fun incrementStandbyHintLaunchCount(): Int {
+        val current = getStandbyHintLaunchCount()
+        if (current < 2) {
+            val newCount = current + 1
+            prefs.edit { putInt(KEY_STANDBY_HINT_LAUNCH_COUNT, newCount) }
+            return newCount
+        }
+        return current
     }
 
     fun getSettings(): ClockSettings {
