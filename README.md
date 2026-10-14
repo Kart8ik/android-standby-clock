@@ -8,11 +8,15 @@ Built with modern Android development practices, the application features Jetpac
   <img src="standby_clock.jpg" alt="Standby Clock">
 </p>
 
-<table align="center">
+<table align="center" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td><img src="settings_menu.jpg" alt="Settings Menu" width="300"></td>
-    <td width="30"></td>
-    <td><img src="color_dialog.jpg" alt="Color Dialog" width="300"></td>
+    <td>
+      <img src="settings_menu.jpg" alt="Settings Menu" width="300">
+    </td>
+    <td width="90"></td>
+    <td>
+      <img src="color_dialog.jpg" alt="Color Dialog" width="300">
+    </td>
   </tr>
 </table>
 
