@@ -4,9 +4,14 @@ Table Clock is a modern, retro-styled bedside digital clock application for Andr
 
 Built with modern Android development practices, the application features Jetpack Compose, Material 3 design system, Clean Architecture, and Kotlin Coroutines.
 
-![Standby Clock](standby_clock.jpg)
-![Settings Menu](settings_menu.jpg)
-![Color Dialog](color_dialog.jpg)
+ <p align="center">
+  <img src="standby_clock.jpg" alt="Standby Clock" width="300">
+</p>
+
+<p align="center">
+  <img src="settings_menu.jpg" alt="Settings Menu" width="300">
+  <img src="color_dialog.jpg" alt="Color Dialog" width="300">
+</p>
 ---
 
 ## Features
