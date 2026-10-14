@@ -191,6 +191,7 @@ fun SettingsScreen(
             title = title,
             initialColor = currentColor,
             pickerType = pickerType,
+            recentColors = uiState.getRecentColorsFor(pickerType),
             onColorSelected = { color -> onColorSelected(pickerType, color) },
             onDismiss = onDismissColorPicker
         )

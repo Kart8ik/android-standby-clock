@@ -1,6 +1,7 @@
 package com.example.myapplication.domain.repository
 
 import com.example.myapplication.domain.model.ClockSettings
+import com.example.myapplication.ui.settings.ColorPickerType
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {
@@ -12,4 +13,5 @@ interface SettingsRepository {
     suspend fun setColorBg(color: Int)
     suspend fun setColorActive(color: Int)
     suspend fun setColorInactive(color: Int)
+    suspend fun addRecentColor(type: ColorPickerType, color: Int)
 }

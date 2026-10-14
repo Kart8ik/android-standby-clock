@@ -39,6 +39,7 @@ fun ColorPickerDialog(
     title: String,
     initialColor: Int,
     pickerType: ColorPickerType,
+    recentColors: List<Int> = emptyList(),
     onColorSelected: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -118,12 +119,54 @@ fun ColorPickerDialog(
                     )
                 }
 
+                // Recent Colors Section (5 slots)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Recent Colors",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        for (i in 0 until 5) {
+                            if (i < recentColors.size) {
+                                val recentColor = recentColors[i]
+                                Surface(
+                                    onClick = { currentColor = recentColor },
+                                    shape = CircleShape,
+                                    color = Color(recentColor),
+                                    modifier = Modifier.size(36.dp)
+                                ) {}
+                            } else {
+                                // Empty Placeholder Slot (not clickable)
+                                Surface(
+                                    shape = CircleShape,
+                                    color = Color.Transparent,
+                                    border = BorderStroke(
+                                        1.5.dp,
+                                        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                                    ),
+                                    modifier = Modifier.size(36.dp)
+                                ) {}
+                            }
+                        }
+                    }
+                }
+
                 // Interactive Color Wheel
                 AndroidView(
                     factory = { context ->
                         ColorWheelView(context).apply {
                             primaryColor = themePrimaryColor
-                            selectedColor = initialColor
+                            selectedColor = currentColor
                             setOnTouchListener { _, _ ->
                                 post {
                                     currentColor = selectedColor
@@ -134,6 +177,9 @@ fun ColorPickerDialog(
                     },
                     update = { colorWheel ->
                         colorWheel.primaryColor = themePrimaryColor
+                        if (colorWheel.selectedColor != currentColor) {
+                            colorWheel.selectedColor = currentColor
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()

@@ -71,11 +71,14 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun onColorSelected_updatesRepositoryColor() = runTest {
+    fun onColorSelected_updatesRepositoryColorAndCategoryRecentColors() = runTest {
         val newColor = 0xFF998877.toInt()
         viewModel.onColorSelected(ColorPickerType.ACTIVE_SEGMENT, newColor)
         testDispatcher.scheduler.advanceUntilIdle()
         val settings = fakeRepository.settings.first()
         assertEquals(newColor, settings.colorActive)
+        assertEquals(listOf(newColor), settings.recentColorsActive)
+        assertTrue(settings.recentColorsBg.isEmpty())
+        assertTrue(settings.recentColorsInactive.isEmpty())
     }
 }

@@ -38,8 +38,7 @@ fun ColorSettingRow(
             onClick = onClick,
             modifier = Modifier.size(40.dp),
             shape = CircleShape,
-            color = color,
-            border = BorderStroke(2.dp, Color.LightGray)
+            color = color
         ) {}
     }
 }

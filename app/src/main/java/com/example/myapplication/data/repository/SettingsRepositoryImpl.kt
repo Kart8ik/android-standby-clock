@@ -3,6 +3,7 @@ package com.example.myapplication.data.repository
 import com.example.myapplication.data.preferences.PreferencesDataSource
 import com.example.myapplication.domain.model.ClockSettings
 import com.example.myapplication.domain.repository.SettingsRepository
+import com.example.myapplication.ui.settings.ColorPickerType
 import kotlinx.coroutines.flow.Flow
 
 class SettingsRepositoryImpl(
@@ -31,5 +32,9 @@ class SettingsRepositoryImpl(
 
     override suspend fun setColorInactive(color: Int) {
         dataSource.setColorInactive(color)
+    }
+
+    override suspend fun addRecentColor(type: ColorPickerType, color: Int) {
+        dataSource.addRecentColor(type, color)
     }
 }

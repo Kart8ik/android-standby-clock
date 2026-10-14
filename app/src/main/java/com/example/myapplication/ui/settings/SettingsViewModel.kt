@@ -35,7 +35,10 @@ class SettingsViewModel(
             colorActive = settings.colorActive,
             colorInactive = settings.colorInactive,
             activeColorPickerType = colorPicker,
-            showActivationInstructions = showActivation
+            showActivationInstructions = showActivation,
+            recentColorsBg = settings.recentColorsBg,
+            recentColorsActive = settings.recentColorsActive,
+            recentColorsInactive = settings.recentColorsInactive
         )
     }.stateIn(
         scope = viewModelScope,
@@ -45,7 +48,10 @@ class SettingsViewModel(
             tempUnit = initialSettings.tempUnit,
             colorBg = initialSettings.colorBg,
             colorActive = initialSettings.colorActive,
-            colorInactive = initialSettings.colorInactive
+            colorInactive = initialSettings.colorInactive,
+            recentColorsBg = initialSettings.recentColorsBg,
+            recentColorsActive = initialSettings.recentColorsActive,
+            recentColorsInactive = initialSettings.recentColorsInactive
         )
     )
 
@@ -84,6 +90,7 @@ class SettingsViewModel(
                 ColorPickerType.ACTIVE_SEGMENT -> settingsRepository.setColorActive(color)
                 ColorPickerType.INACTIVE_SEGMENT -> settingsRepository.setColorInactive(color)
             }
+            settingsRepository.addRecentColor(type, color)
         }
     }
 

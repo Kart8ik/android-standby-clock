@@ -13,5 +13,14 @@ data class SettingsUiState(
     val colorActive: Int = 0xFF78AB78.toInt(),
     val colorInactive: Int = 0xFF0C0F0C.toInt(),
     val activeColorPickerType: ColorPickerType? = null,
-    val showActivationInstructions: Boolean = false
-)
+    val showActivationInstructions: Boolean = false,
+    val recentColorsBg: List<Int> = emptyList(),
+    val recentColorsActive: List<Int> = emptyList(),
+    val recentColorsInactive: List<Int> = emptyList()
+) {
+    fun getRecentColorsFor(type: ColorPickerType): List<Int> = when (type) {
+        ColorPickerType.BACKGROUND -> recentColorsBg
+        ColorPickerType.ACTIVE_SEGMENT -> recentColorsActive
+        ColorPickerType.INACTIVE_SEGMENT -> recentColorsInactive
+    }
+}
