@@ -46,6 +46,8 @@ class PreferencesDataSource(private val context: Context) {
         )
     }
 
+    fun getInitialSettings(): ClockSettings = getSettings()
+
     val settingsFlow: Flow<ClockSettings> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
             trySend(getSettings())

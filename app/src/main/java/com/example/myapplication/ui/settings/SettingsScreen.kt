@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,13 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.myapplication.AppSettings
 import com.example.myapplication.LcdClockView
 import com.example.myapplication.R
+import com.example.myapplication.ui.settings.components.ActivationInstructionsBottomSheet
+import com.example.myapplication.ui.settings.components.ActivationSettingRow
 import com.example.myapplication.ui.settings.components.ColorPickerDialog
 import com.example.myapplication.ui.settings.components.ColorSettingRow
 import com.example.myapplication.ui.settings.components.SettingsSwitchRow
@@ -48,6 +50,8 @@ fun SettingsScreenRoute(
         onOpenColorPicker = viewModel::openColorPicker,
         onColorSelected = viewModel::onColorSelected,
         onDismissColorPicker = viewModel::dismissColorPicker,
+        onShowActivationInstructions = viewModel::showActivationInstructions,
+        onDismissActivationInstructions = viewModel::dismissActivationInstructions,
         onEnterStandby = onEnterStandby,
         onOpenScreenSaverSettings = onOpenScreenSaverSettings,
         modifier = modifier
@@ -62,6 +66,8 @@ fun SettingsScreen(
     onOpenColorPicker: (ColorPickerType) -> Unit,
     onColorSelected: (ColorPickerType, Int) -> Unit,
     onDismissColorPicker: () -> Unit,
+    onShowActivationInstructions: () -> Unit,
+    onDismissActivationInstructions: () -> Unit,
     onEnterStandby: () -> Unit,
     onOpenScreenSaverSettings: () -> Unit,
     modifier: Modifier = Modifier
@@ -92,25 +98,22 @@ fun SettingsScreen(
                         }
                     },
                     update = { clockView ->
-                        // Synchronize AppSettings bridge for LcdClockView
-                        AppSettings.set24HourFormat(clockView.context, uiState.is24HourFormat)
-                        AppSettings.setTempUnit(clockView.context, uiState.tempUnit)
-                        AppSettings.setColorBg(clockView.context, uiState.colorBg)
-                        AppSettings.setColorActive(clockView.context, uiState.colorActive)
-                        AppSettings.setColorInactive(clockView.context, uiState.colorInactive)
-                        clockView.refreshColors()
+                        clockView.setOverrideColors(
+                            bg = uiState.colorBg,
+                            active = uiState.colorActive,
+                            inactive = uiState.colorInactive
+                        )
                         clockView.updateTime()
                     },
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
-
-
             // Settings Menu Card
             Card(
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -146,45 +149,33 @@ fun SettingsScreen(
                         color = Color(uiState.colorInactive),
                         onClick = { onOpenColorPicker(ColorPickerType.INACTIVE_SEGMENT) }
                     )
-                }
-            }
 
-            // Action Buttons
-            Column(modifier = Modifier.padding(top = 24.dp)) {
-                Button(
-                    onClick = onEnterStandby,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(bottom = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.enter_standby_mode),
-                        style = MaterialTheme.typography.titleMedium
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        color = MaterialTheme.colorScheme.outlineVariant
                     )
-                }
 
-                Button(
-                    onClick = onOpenScreenSaverSettings,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(top = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.open_screen_saver_settings),
-                        style = MaterialTheme.typography.titleMedium
+                    ActivationSettingRow(
+                        title = stringResource(R.string.how_to_activate_title),
+                        subtitle = stringResource(R.string.how_to_activate_desc),
+                        onClick = onShowActivationInstructions
                     )
                 }
             }
 
-            Text(
-                text = stringResource(R.string.instructions),
-                style = MaterialTheme.typography.bodySmall,
+            Button(
+                onClick = onEnterStandby,
                 modifier = Modifier
-                    .padding(top = 24.dp, bottom = 24.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
+                    .fillMaxWidth()
+                    .height(96.dp)
+                    .padding(top = 24.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.enter_standby_mode),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+
         }
     }
 
@@ -204,5 +195,12 @@ fun SettingsScreen(
             onDismiss = onDismissColorPicker
         )
     }
-}
 
+    // Activation Instructions Bottom Sheet
+    if (uiState.showActivationInstructions) {
+        ActivationInstructionsBottomSheet(
+            onOpenScreenSaverSettings = onOpenScreenSaverSettings,
+            onDismiss = onDismissActivationInstructions
+        )
+    }
+}

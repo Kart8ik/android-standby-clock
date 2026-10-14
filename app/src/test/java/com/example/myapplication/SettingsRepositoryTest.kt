@@ -61,6 +61,7 @@ class SettingsRepositoryTest {
     class FakeSettingsRepository : SettingsRepository {
         private val _settings = MutableStateFlow(ClockSettings())
         override val settings: Flow<ClockSettings> = _settings
+        override fun getInitialSettings(): ClockSettings = _settings.value
 
         override suspend fun set24HourFormat(use24Hour: Boolean) {
             _settings.value = _settings.value.copy(is24HourFormat = use24Hour)

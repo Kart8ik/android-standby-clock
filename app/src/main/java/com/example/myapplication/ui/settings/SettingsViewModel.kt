@@ -18,24 +18,35 @@ class SettingsViewModel(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
+    private val initialSettings = settingsRepository.getInitialSettings()
+
     private val _activeColorPicker = MutableStateFlow<ColorPickerType?>(null)
+    private val _showActivationInstructions = MutableStateFlow(false)
 
     val uiState: StateFlow<SettingsUiState> = combine(
         settingsRepository.settings,
-        _activeColorPicker
-    ) { settings, colorPicker ->
+        _activeColorPicker,
+        _showActivationInstructions
+    ) { settings, colorPicker, showActivation ->
         SettingsUiState(
             is24HourFormat = settings.is24HourFormat,
             tempUnit = settings.tempUnit,
             colorBg = settings.colorBg,
             colorActive = settings.colorActive,
             colorInactive = settings.colorInactive,
-            activeColorPickerType = colorPicker
+            activeColorPickerType = colorPicker,
+            showActivationInstructions = showActivation
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = SettingsUiState()
+        initialValue = SettingsUiState(
+            is24HourFormat = initialSettings.is24HourFormat,
+            tempUnit = initialSettings.tempUnit,
+            colorBg = initialSettings.colorBg,
+            colorActive = initialSettings.colorActive,
+            colorInactive = initialSettings.colorInactive
+        )
     )
 
     fun on24HourFormatChanged(enabled: Boolean) {
@@ -56,6 +67,14 @@ class SettingsViewModel(
 
     fun dismissColorPicker() {
         _activeColorPicker.value = null
+    }
+
+    fun showActivationInstructions() {
+        _showActivationInstructions.value = true
+    }
+
+    fun dismissActivationInstructions() {
+        _showActivationInstructions.value = false
     }
 
     fun onColorSelected(type: ColorPickerType, color: Int) {

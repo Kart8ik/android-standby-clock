@@ -10,4 +10,6 @@
     <string name="background_color">Background Color</string>
     <string name="active_segment_color">Active Segment Color</string>
     <string name="inactive_segment_color">Inactive Segment Color</string>
+    <string name="how_to_activate_title">How to activate</string>
+    <string name="how_to_activate_desc">Learn how to set up automatic or manual activation</string>
 </resources>

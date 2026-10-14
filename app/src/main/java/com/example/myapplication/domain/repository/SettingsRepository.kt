@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {
     val settings: Flow<ClockSettings>
+    fun getInitialSettings(): ClockSettings
     
     suspend fun set24HourFormat(use24Hour: Boolean)
     suspend fun setTempUnit(unit: String)

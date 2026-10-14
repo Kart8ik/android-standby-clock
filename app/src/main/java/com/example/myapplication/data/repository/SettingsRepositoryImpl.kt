@@ -11,6 +11,8 @@ class SettingsRepositoryImpl(
 
     override val settings: Flow<ClockSettings> = dataSource.settingsFlow
 
+    override fun getInitialSettings(): ClockSettings = dataSource.getInitialSettings()
+
     override suspend fun set24HourFormat(use24Hour: Boolean) {
         dataSource.set24HourFormat(use24Hour)
     }
