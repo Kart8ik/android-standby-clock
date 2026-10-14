@@ -36,6 +36,9 @@ class ColorWheelView @JvmOverloads constructor(
 
     private var draggingWheel = false
     private var draggingBrightness = false
+    private var isDragging = false
+
+    var onColorChanged: ((Int) -> Unit)? = null
 
     var primaryColor: Int = 0xFF6750A4.toInt()
         set(value) {
@@ -216,16 +219,19 @@ class ColorWheelView @JvmOverloads constructor(
         val outerRadius = dp(12f)
 
         val primaryColor = primaryColor
+
         // Circle Indicator
         indicatorPaint.style = Paint.Style.FILL
         indicatorPaint.color = primaryColor
-        indicatorPaint.strokeWidth = dp(3.5f)
         indicatorPaint.setShadowLayer(
-            dp(4f),
+            dp(8f),
             0f,
             0f,
             Color.DKGRAY
         )
+
+
+
         canvas.drawCircle(x, y, outerRadius, indicatorPaint)
 
     }
@@ -354,7 +360,7 @@ class ColorWheelView @JvmOverloads constructor(
         brightnessIndicatorPaint.style = Paint.Style.FILL
         brightnessIndicatorPaint.color = primaryColor
         brightnessIndicatorPaint.setShadowLayer(
-            dp(4f),
+            dp(8f),
             0f,
             0f,
             Color.DKGRAY
@@ -382,88 +388,75 @@ class ColorWheelView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val padding = dp(24f)
+        val brightnessHeight = dp(32f)
+
+        val sliderLeft = padding
+        val sliderRight = width - padding
+        val sliderTop = height - padding - brightnessHeight
+        val sliderBottom = sliderTop + brightnessHeight
 
         when (event.actionMasked) {
-
             MotionEvent.ACTION_DOWN -> {
+                val dx = event.x - wheelCenterX
+                val dy = event.y - wheelCenterY
+                val distance = sqrt(dx * dx + dy * dy)
 
-                val dx =
-                    event.x - wheelCenterX
-
-                val dy =
-                    event.y - wheelCenterY
-
-                val distance =
-                    sqrt(dx * dx + dy * dy)
-
-                val brightnessTop =
-                    height -
-                            dp(16f) -
-                            dp(32f)
+                val touchMargin = dp(8f)
+                val isTouchInSlider = event.y >= (sliderTop - touchMargin) &&
+                        event.y <= (sliderBottom + touchMargin) &&
+                        event.x >= (sliderLeft - touchMargin) &&
+                        event.x <= (sliderRight + touchMargin)
 
                 if (distance <= wheelRadius) {
-
                     draggingWheel = true
                     draggingBrightness = false
-
-                    updateWheelSelection(
-                        event.x,
-                        event.y
-                    )
-
+                    isDragging = false
+                    parent?.requestDisallowInterceptTouchEvent(true)
+                    updateWheelSelection(event.x, event.y)
                     return true
-                }
-
-                if (event.y >= brightnessTop &&
-                    event.y <= brightnessTop + dp(32f)
-                ) {
-
+                } else if (isTouchInSlider) {
                     draggingBrightness = true
                     draggingWheel = false
-
-                    updateBrightness(
-                        event.x
-                    )
-
+                    isDragging = false
+                    parent?.requestDisallowInterceptTouchEvent(true)
+                    updateBrightness(event.x)
                     return true
                 }
             }
 
             MotionEvent.ACTION_MOVE -> {
-
                 if (draggingWheel) {
-
-                    updateWheelSelection(
-                        event.x,
-                        event.y
-                    )
-
+                    isDragging = true
+                    updateWheelSelection(event.x, event.y)
                     return true
-                }
-
-                if (draggingBrightness) {
-
-                    updateBrightness(
-                        event.x
-                    )
-
+                } else if (draggingBrightness) {
+                    isDragging = true
+                    updateBrightness(event.x)
                     return true
                 }
             }
 
-            MotionEvent.ACTION_UP,
-            MotionEvent.ACTION_CANCEL -> {
-
+            MotionEvent.ACTION_UP -> {
+                val wasDragging = draggingWheel || draggingBrightness
                 draggingWheel = false
                 draggingBrightness = false
+                parent?.requestDisallowInterceptTouchEvent(false)
+                if (!isDragging && !wasDragging) {
+                    performClick()
+                }
+                return true
+            }
 
-                performClick()
-
+            MotionEvent.ACTION_CANCEL -> {
+                draggingWheel = false
+                draggingBrightness = false
+                parent?.requestDisallowInterceptTouchEvent(false)
                 return true
             }
         }
 
-        return true
+        return super.onTouchEvent(event)
     }
 
     override fun performClick(): Boolean {
@@ -512,20 +505,23 @@ class ColorWheelView @JvmOverloads constructor(
         regenerateBrightnessSlider()
 
         invalidate()
+        onColorChanged?.invoke(selectedColor)
     }
 
     private fun updateBrightness(
         x: Float
     ) {
 
-        val left = dp(16f)
-        val right = width - dp(16f)
+        val padding = dp(24f)
+        val sliderLeft = padding
+        val sliderRight = width - padding
 
         value =
-            ((x - left) / (right - left))
+            ((x - sliderLeft) / (sliderRight - sliderLeft))
                 .coerceIn(0f, 1f)
 
         invalidate()
+        onColorChanged?.invoke(selectedColor)
     }
 
     private fun regenerateBrightnessSlider() {

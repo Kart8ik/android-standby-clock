@@ -172,11 +172,8 @@ fun ColorPickerDialog(
                         ColorWheelView(context).apply {
                             primaryColor = themePrimaryColor
                             selectedColor = currentColor
-                            setOnTouchListener { _, _ ->
-                                post {
-                                    currentColor = selectedColor
-                                }
-                                false
+                            onColorChanged = { newColor ->
+                                currentColor = newColor
                             }
                         }
                     },
